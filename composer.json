@@ -1,5 +1,5 @@
 {
-    "name": "yb/apidoc",
+    "name": "yuanbo/apidoc",
     "description": "thinkphp API文档自动生成",
     "type": "think-extend",
     "keywords": [
@@ -20,7 +20,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "yb-code",
+            "name": "yuanbo-code",
             "email": "aron0524@qq.com"
         }
     ],
