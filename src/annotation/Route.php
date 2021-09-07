@@ -1,6 +1,6 @@
 <?php
 
-namespace hg\apidoc\annotation;
+namespace yuanbo\apidoc\annotation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 

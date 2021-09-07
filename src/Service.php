@@ -1,6 +1,6 @@
 <?php
 
-namespace hg\apidoc;
+namespace yuanbo\apidoc;
 
 use think\facade\Config;
 use think\facade\Route;

@@ -32,7 +32,7 @@
     "extra": {
         "think": {
             "services": [
-                "hg\\apidoc\\Service"
+                "yuanbo\\apidoc\\Service"
             ],
             "config": {
                 "apidoc": "src/config.php"

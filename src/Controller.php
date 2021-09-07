@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace hg\apidoc;
+namespace yuanbo\apidoc;
 
 use hg\apidoc\exception\AuthException;
 use hg\apidoc\exception\ErrorException;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace hg\apidoc;
+namespace yuanbo\apidoc;
 
 use think\facade\Config;
 use think\facade\Request;

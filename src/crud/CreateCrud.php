@@ -1,7 +1,7 @@
 <?php
 
 
-namespace hg\apidoc\crud;
+namespace yuanbo\apidoc\crud;
 
 
 use hg\apidoc\exception\ErrorException;

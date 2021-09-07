@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace hg\apidoc\parseApi;
+namespace yuanbo\apidoc\parseApi;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use hg\apidoc\Utils;

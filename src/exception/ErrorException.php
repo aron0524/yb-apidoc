@@ -1,7 +1,7 @@
 <?php
 
 
-namespace hg\apidoc\exception;
+namespace yuanbo\apidoc\exception;
 
 
 use hg\apidoc\Utils;
