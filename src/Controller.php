@@ -3,15 +3,15 @@ declare(strict_types = 1);
 
 namespace yuanbo\apidoc;
 
-use hg\apidoc\exception\AuthException;
-use hg\apidoc\exception\ErrorException;
-use hg\apidoc\parseApi\CacheApiData;
-use hg\apidoc\parseApi\ParseAnnotation;
-use hg\apidoc\parseApi\ParseMarkdown;
+use yuanbo\apidoc\exception\AuthException;
+use yuanbo\apidoc\exception\ErrorException;
+use yuanbo\apidoc\parseApi\CacheApiData;
+use yuanbo\apidoc\parseApi\ParseAnnotation;
+use yuanbo\apidoc\parseApi\ParseMarkdown;
 use think\App;
 use think\facade\Config;
 use think\facade\Request;
-use hg\apidoc\crud\CreateCrud;
+use yuanbo\apidoc\crud\CreateCrud;
 
 class Controller
 {

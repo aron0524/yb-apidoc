@@ -4,12 +4,12 @@
 namespace yuanbo\apidoc\crud;
 
 
-use hg\apidoc\exception\ErrorException;
+use yuanbo\apidoc\exception\ErrorException;
 use think\Db as Db5;
 use think\facade\Config;
 use think\facade\Db;
 use think\facade\App;
-use hg\apidoc\Utils;
+use yuanbo\apidoc\Utils;
 
 
 class CreateCrud

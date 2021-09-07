@@ -4,7 +4,7 @@
 namespace yuanbo\apidoc\exception;
 
 
-use hg\apidoc\Utils;
+use yuanbo\apidoc\Utils;
 use think\Exception;
 use think\exception\HttpException;
 

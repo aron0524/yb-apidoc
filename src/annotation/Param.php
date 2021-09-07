@@ -5,7 +5,7 @@ namespace yuanbo\apidoc\annotation;
 
 /**
  * 请求参数
- * @package hg\apidoc\annotation
+ * @package yuanbo\apidoc\annotation
  * @Annotation
  * @Target({"METHOD","ANNOTATION"})
  */

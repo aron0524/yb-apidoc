@@ -5,7 +5,7 @@ namespace yuanbo\apidoc;
 
 use think\facade\Config;
 use think\facade\Request;
-use hg\apidoc\exception\AuthException;
+use yuanbo\apidoc\exception\AuthException;
 
 class Auth
 {

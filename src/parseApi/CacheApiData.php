@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace yuanbo\apidoc\parseApi;
 
 
-use hg\apidoc\Utils;
+use yuanbo\apidoc\Utils;
 use think\facade\Config;
 
 class CacheApiData

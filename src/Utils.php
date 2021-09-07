@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace yuanbo\apidoc;
 
-use hg\apidoc\exception\ErrorException;
+use yuanbo\apidoc\exception\ErrorException;
 use think\facade\Config;
 use think\response\Json;
 

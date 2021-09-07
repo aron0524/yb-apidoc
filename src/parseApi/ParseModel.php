@@ -6,11 +6,11 @@ namespace yuanbo\apidoc\parseApi;
 use Doctrine\Common\Annotations\Reader;
 use think\Db as Db5;
 use think\facade\Db;
-use hg\apidoc\annotation\Field;
-use hg\apidoc\annotation\WithoutField;
-use hg\apidoc\annotation\AddField;
+use yuanbo\apidoc\annotation\Field;
+use yuanbo\apidoc\annotation\WithoutField;
+use yuanbo\apidoc\annotation\AddField;
 use think\helper\Str;
-use hg\apidoc\Utils;
+use yuanbo\apidoc\Utils;
 
 class ParseModel
 {
