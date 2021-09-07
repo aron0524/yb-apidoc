@@ -15,7 +15,7 @@ class Service extends \think\Service
             $route_prefix = 'apidoc';
             $apidocConfig = Config::get("apidoc")?Config::get("apidoc"):Config::get("apidoc.");
             $routes = function () {
-                $controller_namespace = '\hg\apidoc\Controller@';
+                $controller_namespace = '\yuanbo\apidoc\Controller@';
                 Route::get('config'     , $controller_namespace . 'getConfig');
                 Route::get('apiData'     , $controller_namespace . 'getApidoc');
                 Route::get('mdDetail'     , $controller_namespace . 'getMdDetail');
