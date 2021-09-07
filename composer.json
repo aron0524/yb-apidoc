@@ -39,5 +39,5 @@
             }
         }
     },
-    "minimum-stability": "beta v3.0.0"
+    "minimum-stability": "beta"
 }
