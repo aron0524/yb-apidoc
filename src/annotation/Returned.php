@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\Annotation;
 
 /**
  * 返回参数
- * @package yuanbo\apidoc\annotation
+ * @package hg\apidoc\annotation
  * @Annotation
  * @Target({"METHOD","ANNOTATION"})
  */

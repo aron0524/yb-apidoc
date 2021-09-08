@@ -5,10 +5,16 @@ namespace yuanbo\apidoc\annotation;
 use Doctrine\Common\Annotations\Annotation;
 
 /**
- * 排序
+ * Url
  * @package hg\apidoc\annotation
  * @Annotation
- * @Target({"CLASS"})
+ * @Target({"METHOD"})
  */
-class Sort extends Annotation
-{}
+class Md extends Annotation
+{
+    /**
+     * 引入md内容
+     * @var string
+     */
+    public $ref;
+}

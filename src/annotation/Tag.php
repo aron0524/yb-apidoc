@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\Annotation;
 
 /**
  * Tag
- * @package yuanbo\apidoc\annotation
+ * @package hg\apidoc\annotation
  * @Annotation
  * @Target({"METHOD"})
  */
