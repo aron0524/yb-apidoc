@@ -27,7 +27,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "hg\\apidoc\\": "src/"
+            "yuanbo\\apidoc\\": "src/"
         }
     },
     "extra": {
