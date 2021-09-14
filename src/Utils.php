@@ -144,7 +144,7 @@ class Utils
         foreach ($keys as $k => $v) {
             $parent = !$k ? "" : $keys[$k - 1];
             foreach ($list as $item) {
-                if (((!empty($item['parent']) && $item['parent'] === $parent) || empty($item['parent'])) && $item[$field] == $v || ((!empty($item['parent']) && $item['folder'] === $v)) ) {
+                if (((!empty($item['parent']) && $item['parent'] === $parent) || empty($item['parent'])) && $item[$field] == $v) {
                     $data[] = $item;
                     break;
                 }
@@ -327,8 +327,8 @@ class Utils
         if (!(!empty($config['apps']) && count($config['apps']) > 0)) {
             throw new ErrorException("no config apps", 500);
         }
-        if (strpos($appKey, '_') !== false) {
-            $keyArr = explode("_", $appKey);
+        if (strpos($appKey, ',') !== false) {
+            $keyArr = explode(",", $appKey);
         } else {
             $keyArr = [$appKey];
         }
@@ -431,7 +431,7 @@ class Utils
      * @return string
      */
     public static function createRandKey(string $prefix=""): string{
-       return uniqid($prefix);
+        return uniqid($prefix);
     }
 
     /**
