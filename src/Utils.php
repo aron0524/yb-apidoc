@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace yuanbo\apidoc;
 
+use think\App;
 use yuanbo\apidoc\exception\ErrorException;
 use think\facade\Config;
 use think\facade\Lang;
@@ -322,8 +323,16 @@ class Utils
             $config =$configData;
         }else{
             $config = Config::get("apidoc")?Config::get("apidoc"):Config::get("apidoc.");
+            // 修改配置文件从数据库生成
+            $app            = App::getInstance();
+            $apps           = (new Controller($app))->getSystemConfig();
+            $config['apps'] = $apps;
+
             $config['apps'] = $this->handleAppsConfig($config['apps']);
         }
+        // 初始化第一个项目
+        $appKey         = !empty($appKey) ? $appKey : $apps[0]['folder'] . "," . $apps[0]['items'][0]['folder'];
+
         if (!(!empty($config['apps']) && count($config['apps']) > 0)) {
             throw new ErrorException("no config apps", 500);
         }
@@ -332,6 +341,7 @@ class Utils
         } else {
             $keyArr = [$appKey];
         }
+
         $currentApps = $this->getTreeNodesByKeys($config['apps'], $keyArr, 'folder', 'items');
         if (!$currentApps) {
             throw new ErrorException("appKey error", 412, [
