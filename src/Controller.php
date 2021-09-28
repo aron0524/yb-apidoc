@@ -74,7 +74,7 @@ class Controller
             $config['apps'] = $apps;
         }
         // 业务应用层
-        if ($this->system ==  'DAML')
+        if ($this->system ==  'BSAP')
         {
             $rpc_path = 'rpc\contract\model\DataRpcInterface';
             if (file_exists($rpc_path) == false){
