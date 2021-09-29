@@ -325,9 +325,12 @@ class Utils
             $config = Config::get("apidoc")?Config::get("apidoc"):Config::get("apidoc.");
             // 修改配置文件从数据库生成
             $app            = App::getInstance();
-            $apps           = (new Controller($app))->getSystemConfig();
+            $system         = env('app.system');
+            $apps           = (new Controller($app))->getSystemConfig($system);
             $config['apps'] = $apps;
-
+            //重设缓存
+            Config::set(['apidoc'=>$config]);
+            $this->config = $config;
             $config['apps'] = $this->handleAppsConfig($config['apps']);
         }
         // 初始化第一个项目
