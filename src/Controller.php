@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace yuanbo\apidoc;
 
+use Co\Redis;
+use Decimal\Decimal;
 use http\Env;
 use yuanbo\apidoc\exception\AuthException;
 use yuanbo\apidoc\exception\ErrorException;
@@ -14,6 +16,8 @@ use think\facade\Config;
 use think\facade\Lang;
 use think\facade\Request;
 use think\facade\Db;
+use think\facade\Cache;
+
 
 class Controller
 {
@@ -65,24 +69,32 @@ class Controller
      */
     public function getConfig(){
         $config = $this->config;
-
         // 根据当前系统架构判断 模型层&第三方
         if ($this->system ==  'DAML' || $this->system ==  'TIPY'){
             // 修改配置文件从数据库生成
-            $apps           = $this->getSystemConfig();
+            $apps           = $this->getSystemConfig($this->system);
             $appKey         = $apps[0]['folder'] . "," . $apps[0]['items'][0]['folder'];
             $config['apps'] = $apps;
+            Config::set(['apidoc'=>$config]);
+            $this->config = $config;
         }
+
         // 业务应用层
         if ($this->system ==  'BSAP')
         {
-            $rpc_path = 'rpc\contract\model\DataRpcInterface';
-            if (file_exists($rpc_path) == false){
-                require_once $rpc_path;
-                $model          = new DataRpcInterface();
-                $apps           = $model->apidoc();
+            try {
+                //从缓存读取
+                $apps           = Cache::get('apidoc.apps');
+                if (empty($apps)){
+                    throw new \think\Exception('API文档缓存为空，请先去后台设置API文档缓存！');
+                }
                 $appKey         = $apps[0]['folder'] . "," . $apps[0]['items'][0]['folder'];
                 $config['apps'] = $apps;
+                Config::set(['apidoc'=>$config]);
+                $this->config = $config;
+            }
+            catch(\think\exception\ErrorException $e){
+                throw new \think\Exception($e->getMessage());
             }
         }
 
@@ -149,6 +161,7 @@ class Controller
     public function getApidoc(){
 
         $config = $this->config;
+
         $request = Request::instance();
         $params = $request->param();
         $lang = "";
@@ -271,8 +284,8 @@ class Controller
      * @adddate                         2021/9/28
      * @lasteditTime                    2021/9/28
      */
-    public function getSystemConfig(){
-        $apps       = $this->system;//获取系统架构层
+    public function getSystemConfig($system='BSAP'){
+        $apps       = !empty($system) ? $system : $this->system;//获取系统架构层
         // 查询分类同步表
         $field      = ['id','pid','name as label','code as value'];
         $children = Db::table('csap_sys_code')
@@ -283,51 +296,56 @@ class Controller
         //递归根据不同类型返回不同树结构
         $list = $this->tree_cate($children);
         // 业务应用层
-        if ($this->system == 'BSAP'){
+        if ($apps == 'BSAP'){
             $list = $list[0];
         }
         // 系统公共层
-        if ($this->system == 'SYSC'){
+        if ($apps == 'SYSC'){
             $list = $list[1];
         }
         // 数据模型层
-        if ($this->system == 'DAML'){
+        if ($apps == 'DAML'){
             $list = $list[2];
         }
         // 第三方接口层
-        if ($this->system == 'TIPY'){
+        if ($apps == 'TIPY'){
             $list = $list[3];
         }
         $config = [];
         // 获取系统版本
         $version = $this->getSystemVersion();
-        foreach ($list['children'] as $key=>$value){
-            foreach ($value['children'] as $child) {
-                if ($child['level']==3){
-                    foreach ($version as $k=>$v){
-                        $child['version'][] = $v;
-                    }
-                    // 业务应用层
-                    if ($this->system == 'BSAP'){
-                        $child['code'] = strtolower('DAML_APIM_'.$child['value']);
-                    }
-                    // 系统公共层
-                    if ($this->system == 'SYSC'){
-                        $child['code'] = strtolower('DAML_APIM_'.$child['value']);
-                    }
-                    // 数据模型层
-                    if ($this->system == 'DAML'){
-                        $child['code'] = strtolower('DAML_APIM_'.$child['value']);
-                    }
-                    // 第三方接口层
-                    if ($this->system == 'TIPY'){
-                        $child['code'] = strtolower('DAML_APIM_'.$child['value']);
-                    }
+        if ($list['children']){
+            foreach ($list['children'] as $key=>$value){
+                if ($value['children']){
+                    foreach ($value['children'] as $child) {
+                        if ($child['level']==3){
+                            foreach ($version as $k=>$v){
+                                $child['version'][] = $v;
+                            }
+                            // 业务应用层
+                            if ($this->system == 'BSAP'){
+                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                            }
+                            // 系统公共层
+                            if ($this->system == 'SYSC'){
+                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                            }
+                            // 数据模型层
+                            if ($this->system == 'DAML'){
+                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                            }
+                            // 第三方接口层
+                            if ($this->system == 'TIPY'){
+                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                            }
 
-                    $config[] = $child;
+                            $config[] = $child;
+                        }
+                    }
                 }
             }
         }
+
         $configs = [];
         // 生成ApiDoc配置信息
         foreach ($config as $key=>$value){
