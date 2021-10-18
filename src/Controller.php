@@ -336,7 +336,7 @@ class Controller
                             }
                             // 第三方接口层
                             if ($this->system == 'TIPY'){
-                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                                $child['code'] = strtolower('TIPY_TDPM_'.$child['value']);
                             }
 
                             $config[] = $child;
