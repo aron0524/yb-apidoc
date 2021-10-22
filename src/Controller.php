@@ -379,7 +379,7 @@ class Controller
             $data     = [];
             $field    = ['version'];
             //查询所有code返回码和消息
-            $version     = Db::table('daml_apim_api_version')->where('status', '=', 0)->field($field)->select()->toArray();
+            $version     = Db::table('daml_apim_api_version')->where('status', '=', 1)->field($field)->select()->toArray();
             if ($version){
                 foreach ($version as $k=>$v){
                     $data[] = $v['version'];
