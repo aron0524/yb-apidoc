@@ -327,6 +327,11 @@ class Utils
             $app            = App::getInstance();
             $system         = env('app.system');
             $apps           = (new Controller($app))->getSystemConfig($system);
+            if ($system ==  'DAML'){
+                // 修改配置文件从数据库生成
+                $bsap           = (new Controller($app))->getSystemConfig('BSAP');
+                $apps           = array_merge($apps, $bsap);
+            }
             $config['apps'] = $apps;
             //重设缓存
             Config::set(['apidoc'=>$config]);

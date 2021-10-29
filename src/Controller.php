@@ -74,6 +74,12 @@ class Controller
             // 修改配置文件从数据库生成
             $apps           = $this->getSystemConfig($this->system);
             $appKey         = $apps[0]['folder'] . "," . $apps[0]['items'][0]['folder'];
+
+            if ($this->system ==  'DAML'){
+                // 修改配置文件从数据库生成
+                $bsap           = $this->getSystemConfig('BSAP');
+                $apps           = array_merge($apps, $bsap);
+            }
             $config['apps'] = $apps;
             Config::set(['apidoc'=>$config]);
             $this->config = $config;
@@ -285,7 +291,9 @@ class Controller
      * @lasteditTime                    2021/9/28
      */
     public function getSystemConfig($system='BSAP'){
-        $apps       = !empty($system) ? $system : $this->system;//获取系统架构层
+        $apps       = !empty($system) ? $system : '';//获取系统架构层
+
+
         // 查询分类同步表
         $field      = ['id','pid','name as label','code as value'];
         $children = Db::table('csap_sys_code')
@@ -323,19 +331,19 @@ class Controller
                                 $child['version'][] = $v;
                             }
                             // 业务应用层
-                            if ($this->system == 'BSAP'){
-                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
+                            if ($system == 'BSAP'){
+                                $child['code'] = strtolower('BSAP_'.$value['value'].'_'.$child['value']);
                             }
                             // 系统公共层
-                            if ($this->system == 'SYSC'){
+                            if ($system == 'SYSC'){
                                 $child['code'] = strtolower('DAML_APIM_'.$child['value']);
                             }
                             // 数据模型层
-                            if ($this->system == 'DAML'){
+                            if ($system == 'DAML'){
                                 $child['code'] = strtolower('DAML_APIM_'.$child['value']);
                             }
                             // 第三方接口层
-                            if ($this->system == 'TIPY'){
+                            if ($system == 'TIPY'){
                                 $child['code'] = strtolower('TIPY_TDPM_'.$child['value']);
                             }
 
