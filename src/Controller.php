@@ -89,8 +89,7 @@ class Controller
         if ($this->system ==  'BSAP')
         {
             try {
-                //从缓存读取
-                $apps           = Cache::get('apidoc.apps');
+                $apps           = $this->getSystemConfig($this->system);
                 if (empty($apps)){
                     throw new \think\Exception('API文档缓存为空，请先去后台设置API文档缓存！');
                 }
@@ -293,7 +292,17 @@ class Controller
     public function getSystemConfig($system='BSAP'){
         $apps       = !empty($system) ? $system : '';//获取系统架构层
 
-
+        if ($system == 'BSAP'){
+            try {
+                //读取插件配置
+                $ApiDocDatabase = include_once ('config/database.php');
+                //重设配置
+                Config::set(['database'=>$ApiDocDatabase]);
+            }
+            catch (Exception $e){
+                return $e->getMessage();
+            }
+        }
         // 查询分类同步表
         $field      = ['id','pid','name as label','code as value'];
         $children = Db::table('csap_sys_code')
@@ -303,14 +312,14 @@ class Controller
         $list  = [];
         //递归根据不同类型返回不同树结构
         $list = $this->tree_cate($children);
-        // 业务应用层
-        if ($apps == 'BSAP'){
-            $list = $list[0];
+        // 合并 业务应用层 系统公共层 系统
+        if ($apps == 'BSAP' || $apps == 'SYSC'){
+            $res = [];
+            array_push($res,$list[0]);
+            array_push($res,$list[1]);
+            $list = $res;
         }
-        // 系统公共层
-        if ($apps == 'SYSC'){
-            $list = $list[1];
-        }
+
         // 数据模型层
         if ($apps == 'DAML'){
             $list = $list[2];
@@ -319,24 +328,17 @@ class Controller
         if ($apps == 'TIPY'){
             $list = $list[3];
         }
+
         $config = [];
         // 获取系统版本
         $version = $this->getSystemVersion();
-        if ($list['children']){
+        if ($system != 'BSAP' && $system != 'SYSC'){
             foreach ($list['children'] as $key=>$value){
                 if ($value['children']){
                     foreach ($value['children'] as $child) {
                         if ($child['level']==3){
                             foreach ($version as $k=>$v){
                                 $child['version'][] = $v;
-                            }
-                            // 业务应用层
-                            if ($system == 'BSAP'){
-                                $child['code'] = strtolower('BSAP_'.$value['value'].'_'.$child['value']);
-                            }
-                            // 系统公共层
-                            if ($system == 'SYSC'){
-                                $child['code'] = strtolower('DAML_APIM_'.$child['value']);
                             }
                             // 数据模型层
                             if ($system == 'DAML'){
@@ -352,6 +354,29 @@ class Controller
                     }
                 }
             }
+        }
+
+        if ($apps == 'BSAP' || $apps == 'SYSC'){
+            foreach ($list as $key=>$value){
+                //$list[$key]['code'] = strtolower($value['value']);
+                if ($value['children'] != false){
+                    foreach ($value['children'] as $k=>$v){
+                        //$list[$key]['children'][$k]['code'] = strtolower($value['value'] . "_" . $v['value']);
+                        if ($v['children'] != false){
+
+                            foreach ($v['children'] as $i=>$j){
+
+                                foreach ($version as $n=>$m){
+                                    $j['version'][] = $m;
+                                }
+                                $j['code'] = strtolower($value['value'] . "_" . $v['value']. "_" . $j['value']);
+                                $child[]  = $j;
+                            }
+                        }
+                    }
+                }
+            }
+            $config = $child;
         }
 
         $configs = [];
