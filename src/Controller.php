@@ -358,10 +358,8 @@ class Controller
 
         if ($apps == 'BSAP' || $apps == 'SYSC'){
             foreach ($list as $key=>$value){
-                //$list[$key]['code'] = strtolower($value['value']);
                 if ($value['children'] != false){
                     foreach ($value['children'] as $k=>$v){
-                        //$list[$key]['children'][$k]['code'] = strtolower($value['value'] . "_" . $v['value']);
                         if ($v['children'] != false){
 
                             foreach ($v['children'] as $i=>$j){
@@ -369,8 +367,15 @@ class Controller
                                 foreach ($version as $n=>$m){
                                     $j['version'][] = $m;
                                 }
-                                $j['code'] = strtolower($value['value'] . "_" . $v['value']. "_" . $j['value']);
-                                $child[]  = $j;
+                                $j['group'] = Db::table('csap_api_group')
+                                    ->where('soft_del', '=',1)
+                                    ->where('level', '=',1)
+                                    ->where('sys_code', '=',$j['value'])
+                                    ->field('api_group_name as title,api_group_code as name')
+                                    ->fetchSql(false)
+                                    ->select()->toArray();
+                                $j['code']  = strtolower($value['value'] . "_" . $v['value']. "_" . $j['value']);
+                                $child[]    = $j;
                             }
                         }
                     }
@@ -380,6 +385,7 @@ class Controller
         }
 
         $configs = [];
+
         // 生成ApiDoc配置信息
         foreach ($config as $key=>$value){
             $configs[$key]['title']  = $value['label'];
@@ -390,11 +396,16 @@ class Controller
                 $configs[$key]['items'][$k]['title']    = $v;
                 $configs[$key]['items'][$k]['path']     = "app\\" . $value['code'] . "\\controller\\".$v;
                 $configs[$key]['items'][$k]['folder']   = $v;
-                $configs[$key]['items'][$k]['groups']   = [
-                    ['title'=>'前端','name'=>'qianduan','name'=>'qianduan'],
-                    ['title'=>'后端','name'=>'houduan','name'=>'houduan'],
-                ];
-
+                //自定义分组
+                if ($apps == 'BSAP' || $apps == 'SYSC'){
+                    $configs[$key]['items'][$k]['groups'] = $value['group'];
+                }
+                else{
+                    $configs[$key]['items'][$k]['groups']   = [
+                        ['title'=>'前端','name'=>'qianduan'],
+                        ['title'=>'后端','name'=>'houduan'],
+                    ];
+                }
             }
         }
         return $configs;
