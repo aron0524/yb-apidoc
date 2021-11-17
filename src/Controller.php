@@ -368,7 +368,7 @@ class Controller
                                     $j['version'][] = $m;
                                 }
                                 $j['group'] = Db::table('csap_api_group')
-                                    ->where('soft_del', '=',1)
+                                    ->where('delete_time', '=',0)
                                     ->where('level', '=',1)
                                     ->where('sys_code', '=',$j['value'])
                                     ->field('api_group_name as title,api_group_code as name')
@@ -399,6 +399,7 @@ class Controller
                 //自定义分组
                 if ($apps == 'BSAP' || $apps == 'SYSC'){
                     $configs[$key]['items'][$k]['groups'] = $value['group'];
+                    $configs[$key]['items'][$k]['host']   = env('APP_HOST');
                 }
                 else{
                     $configs[$key]['items'][$k]['groups']   = [
