@@ -367,7 +367,7 @@ class Controller
                                 foreach ($version as $n=>$m){
                                     $j['version'][] = $m;
                                 }
-                                $j['group'] = Db::table('csap_api_group')
+                                $j['group'] = Db::table('csap_auth_api_group')
                                     ->where('delete_time', '=',0)
                                     ->where('level', '=',1)
                                     ->where('sys_code', '=',$j['value'])
