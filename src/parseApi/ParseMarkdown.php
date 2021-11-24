@@ -42,6 +42,7 @@ class ParseMarkdown
                     ->where('a.status', '=',1)
                     ->where('a.code', '=',$appKey)
                     ->where('d.system_id = a.id')
+                    ->where('d.status = 1')
                     ->field(['a.id','a.name','d.system_id','d.doc_name','d.doc_filepath','d.id as docid'])
                     ->select()->toArray();
                 if ($apps){
