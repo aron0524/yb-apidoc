@@ -72,6 +72,20 @@ class Utils
     }
 
     /**
+     * 读取远程文件内容
+     * @param $fileName
+     * @return false|string
+     */
+    public static function getFileContents(string $fileName): string
+    {
+        $content = "";
+        if ($fileName){
+            $content = file_get_contents($fileName);
+        }
+        return $content;
+    }
+
+    /**
      * 保存文件
      * @param $path
      * @param $str_tmp
