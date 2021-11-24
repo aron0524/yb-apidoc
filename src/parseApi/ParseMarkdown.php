@@ -12,10 +12,11 @@ use think\facade\Config;
 class ParseMarkdown
 {
     protected $config = [];
-
+    protected $system;//当前系统架构
     public function __construct()
     {
         $this->config = Config::get('apidoc')?Config::get('apidoc'):Config::get('apidoc.');
+        $this->system = env('app.system');
     }
 
     /**
