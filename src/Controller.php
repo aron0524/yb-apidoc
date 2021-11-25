@@ -72,7 +72,7 @@ class Controller
         // 根据当前系统架构判断 模型层&第三方
         if ($this->system ==  'DAML' || $this->system ==  'TIPY'){
             // 修改配置文件从数据库生成
-            $apps           = $this->getSystemConfig($this->system);
+            $apps           = $this->getSystemConfig($this->system,0);
             $appKey         = $apps[0]['folder'] . "," . $apps[0]['items'][0]['folder'];
 
             if ($this->system ==  'DAML'){
@@ -89,7 +89,7 @@ class Controller
         if ($this->system ==  'BSAP')
         {
             try {
-                $apps           = $this->getSystemConfig($this->system);
+                $apps           = $this->getSystemConfig($this->system,0);
                 if (empty($apps)){
                     throw new \think\Exception('API文档缓存为空，请先去后台设置API文档缓存！');
                 }
@@ -396,11 +396,11 @@ class Controller
                 $configs[$key]['items'][$k]['title']    = $v;
                 $configs[$key]['items'][$k]['path']     = "app\\" . $value['code'] . "\\controller\\".$v;
                 $configs[$key]['items'][$k]['folder']   = $v;
-                if (($apps == 'BSAP' || $apps == 'SYSC') && $type = 0){
+                if (($apps == 'BSAP' || $apps == 'SYSC') && $type == 0){
                     $configs[$key]['items'][$k]['groups'] = $value['group'];
                     $configs[$key]['items'][$k]['host']   = env('APP_HOST');
                 }
-                else if(($apps == 'BSAP' || $apps == 'SYSC') && $type = 1){
+                else if(($apps == 'BSAP' || $apps == 'SYSC') && $type == 1){
                     $configs[$key]['items'][$k]['groups']   = [
                         ['title'=>'前端','name'=>'qianduan'],
                         ['title'=>'后端','name'=>'houduan'],
