@@ -77,7 +77,7 @@ class Controller
 
             if ($this->system ==  'DAML'){
                 // 修改配置文件从数据库生成
-                $bsap           = $this->getSystemConfig('BSAP');
+                $bsap           = $this->getSystemConfig('BSAP',1);
                 $apps           = array_merge($apps, $bsap);
             }
             $config['apps'] = $apps;
@@ -289,7 +289,7 @@ class Controller
      * @adddate                         2021/9/28
      * @lasteditTime                    2021/9/28
      */
-    public function getSystemConfig($system='BSAP'){
+    public function getSystemConfig($system='BSAP',$type = 0){
         $apps       = !empty($system) ? $system : '';//获取系统架构层
 
         if ($system == 'BSAP'){
@@ -396,10 +396,15 @@ class Controller
                 $configs[$key]['items'][$k]['title']    = $v;
                 $configs[$key]['items'][$k]['path']     = "app\\" . $value['code'] . "\\controller\\".$v;
                 $configs[$key]['items'][$k]['folder']   = $v;
-                //自定义分组
-                if ($apps == 'BSAP' || $apps == 'SYSC'){
+                if (($apps == 'BSAP' || $apps == 'SYSC') && $type = 0){
                     $configs[$key]['items'][$k]['groups'] = $value['group'];
                     $configs[$key]['items'][$k]['host']   = env('APP_HOST');
+                }
+                else if(($apps == 'BSAP' || $apps == 'SYSC') && $type = 1){
+                    $configs[$key]['items'][$k]['groups']   = [
+                        ['title'=>'前端','name'=>'qianduan'],
+                        ['title'=>'后端','name'=>'houduan'],
+                    ];
                 }
                 else{
                     $configs[$key]['items'][$k]['groups']   = [
