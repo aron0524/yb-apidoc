@@ -26,6 +26,10 @@ class Utils
             'msg'  => $msg,
             'data' => $data,
         ];
+        //开启gzip
+        ob_end_clean();
+        $zlib = ini_get('zlib.output_compression');
+        if(empty($zlib)) ob_start('ob_gzhandler');
         return json($res);
     }
 
