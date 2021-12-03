@@ -347,7 +347,7 @@ class Utils
             $apps           = (new Controller($app))->getSystemConfig($system);
             if ($system ==  'DAML'){
                 // 修改配置文件从数据库生成
-                $bsap           = (new Controller($app))->getSystemConfig('BSAP');
+                $bsap           = (new Controller($app))->getSystemConfig('BSAP',1);
                 $apps           = array_merge($apps, $bsap);
             }
             $config['apps'] = $apps;

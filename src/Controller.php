@@ -309,6 +309,17 @@ class Controller
             ->where('soft_del', '=',1)
             ->field($field)
             ->select()->toArray();
+        if ($type == 1){
+            $csap_data = Db::table('daml_apim_apps')
+                ->where('status', '=',1)
+                ->where('code', '=','DATA')
+                ->fetchSql(false)
+                ->field($field)
+                ->find();
+            if ($children){
+                array_push($children, $csap_data);
+            }
+        }
         $list  = [];
         //递归根据不同类型返回不同树结构
         $list = $this->tree_cate($children);
