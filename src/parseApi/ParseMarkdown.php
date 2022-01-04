@@ -30,7 +30,7 @@ class ParseMarkdown
         if (!empty($config['docs']) && count($config['docs']) > 0) {
             $docData = $this->handleDocsMenuData($config['docs']);
         }
-        if ($this->system == 'DAML'){
+        if ($this->system == 'DAML' || $this->system == 'TIPY'){
             try {
                 //动态加载开发文档
                 $appKey     =   $_REQUEST['appKey'];
@@ -38,7 +38,13 @@ class ParseMarkdown
                 $appKey     =   isset($appKey) ? $appKey[0] : [];
                 $appKey     =   isset($appKey) ? explode('_',$appKey) : [];
                 $appKey     =   isset($appKey) ? strtoupper($appKey[2]) : [];
-                $apps       =   Db::table(['daml_apim_apps a','daml_apim_doc d'])
+                $doc_table  =   '';
+                if ($this->system == 'DAML'){
+                    $doc_table = 'daml_apim_doc';
+                }else{
+                    $doc_table = 'tipy_tdpm_doc';
+                }
+                $apps       =   Db::table(['daml_apim_apps a',$doc_table .' d'])
                     ->where('a.status', '=',1)
                     ->where('a.code', '=',$appKey)
                     ->where('d.system_id = a.id')
@@ -125,7 +131,7 @@ class ParseMarkdown
         }
         $filePath    = App::getRootPath() . $mdPath . $fileSuffix;
         $contents    = Utils::getFileContent($filePath);
-        if ($this->system == 'DAML') {
+        if ($this->system == 'DAML' || $this->system == 'TIPY') {
             //读取远程文件
             if (empty($contents)) {
                 $contents = Utils::getFileContents($mdPath . $fileSuffix);
