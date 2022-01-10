@@ -366,7 +366,7 @@ class Controller
                 }
             }
         }
-
+        //业务层和公共层
         if ($apps == 'BSAP' || $apps == 'SYSC'){
             foreach ($list as $key=>$value){
                 if ($value['children'] != false){
@@ -424,6 +424,24 @@ class Controller
                     ];
                 }
             }
+        }
+        //rpc dtm 测试接口
+        if (($apps == 'BSAP' || $apps == 'SYSC') && $type == 0){
+            $test = [
+                "title" => "测试",
+                "folder" => "test",
+                "path" => "app\\test\\controller",
+                "items" => [
+                    0 => [
+                        "title" => "v1",
+                        "path" => "app\\test\\controller\\v1",
+                        "folder" => "v1",
+                        "groups" => [],
+                        "host" => "http://c1.test:9003",
+                    ]
+                ]
+            ];
+            array_push($configs, $test);
         }
         return $configs;
     }
