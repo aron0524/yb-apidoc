@@ -437,7 +437,7 @@ class Controller
                         "path" => "app\\test\\controller\\v1",
                         "folder" => "v1",
                         "groups" => [],
-                        "host" => "http://c1.test:9003",
+                        "host" => env('APP_HOST'),
                     ]
                 ]
             ];
