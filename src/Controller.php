@@ -334,7 +334,7 @@ class Controller
             }
         }
         // 查询分类同步表
-        $field      = ['id','pid','name as label','code as value','order_value','level'];
+        $field      = ['id','pid','name as label','code as value','order_value'];
         $children = Db::table('csap_sys_code')
             ->where('soft_del', '=',1)
             ->field($field)
