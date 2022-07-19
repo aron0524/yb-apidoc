@@ -17,7 +17,7 @@ use think\facade\Lang;
 use think\facade\Request;
 use think\facade\Db;
 use think\facade\Cache;
-
+use think\Collection;
 
 class Controller
 {
@@ -295,20 +295,52 @@ class Controller
         if ($system == 'BSAP'){
             try {
                 //读取插件配置
-                $ApiDocDatabase = include_once ('config/database.php');
+
+
+
+                $config = Config::get('database');
+                $config['connections']['default'] = [
+                    'type'            => 'mysql',
+                    'hostname'        => env('database.hostname') ? env('database.hostname') :'127.0.0.1';,
+                    'database'        => env('database.database') ? env('database.database') :'',
+                    'username'        => env('database.username') ? env('database.username') :'',
+                    'password'        => env('database.password') ? env('database.password') :'',
+                    'hostport'        => env('database.hostport') ? env('database.hostport') :'3306',
+                    'params'          => [],
+                    'charset'         => 'utf8mb4'
+                ];
+                Config::set($config, 'database');
+//                 $ApiDocDatabase = include_once ('config/database.php');
+//
+//                 $ApiDocDatabase                                     = [];
+//                 $ApiDocDatabase['default']                          = 'mysql';
+//                 $ApiDocDatabase['connections']                      = [];
+//                 $ApiDocDatabase['connections']['mysql']             = [];
+//                 $ApiDocDatabase['connections']['mysql']['hostname'] = env('database.hostname') ? env('database.hostname') :'127.0.0.1';
+//                 $ApiDocDatabase['connections']['mysql']['database'] = env('database.database') ? env('database.database') :'';
+//                 $ApiDocDatabase['connections']['mysql']['username'] = env('database.username') ? env('database.username') :'';
+//                 $ApiDocDatabase['connections']['mysql']['password'] = env('database.password') ? env('database.password') :'';
+//                 $ApiDocDatabase['connections']['mysql']['hostport'] = env('database.hostport') ? env('database.hostport') :'3306';
+//                 $ApiDocDatabase['connections']['mysql']['charset']  = env('database.charset') ? env('database.charset') :'utf8';
+//                 $ApiDocDatabase['connections']['mysql']['prefix']   = '';
+//                 echo "<pre>";
+//                 print_r($ApiDocDatabase);
+//                 echo "</pre>";
                 //重设配置
-                Config::set(['database'=>$ApiDocDatabase]);
+                //Config::set(['database'=>$ApiDocDatabase]);
             }
             catch (Exception $e){
                 return $e->getMessage();
             }
         }
         // 查询分类同步表
-        $field      = ['id','pid','name as label','code as value'];
+        $field      = ['id','pid','name as label','code as value','order_value','level'];
         $children = Db::table('csap_sys_code')
             ->where('soft_del', '=',1)
             ->field($field)
             ->select()->toArray();
+        $children = Collection::make($children);
+        $children = $children->order('order_value', 'ASC')->toArray();
         if ($type == 1){
             $csap_data = Db::table('daml_apim_apps')
                 ->where('status', '=',1)
