@@ -333,12 +333,6 @@ class Controller
             ->where('soft_del', '=',1)
             ->field($field)
             ->select()->toArray();
-        $children = Collection::make($children);
-        $children = $children->order('order_value', 'ASC')->toArray();
-        // echo "<pre>";
-        // print_r($children);
-        // echo "</pre>";
-        // exit;
         if ($type == 1){
             $csap_data = Db::table('daml_apim_apps')
                 ->where('status', '=',1)
@@ -416,6 +410,7 @@ class Controller
                                     ->fetchSql(false)
                                     ->select()->toArray();
                                 $j['code']  = strtolower($value['value'] . "_" . $v['value']. "_" . $j['value']);
+                                $j['order']  = $j['order_value'] ;//子系统排序字段
                                 $child[]    = $j;
                             }
                         }
@@ -432,11 +427,14 @@ class Controller
             $configs[$key]['title']  = $value['label'];
             $configs[$key]['folder'] = $value['code'];
             $configs[$key]['path']   = "app\\" . $value['code'] . "\\controller";
+            $configs[$key]['order']  = $value['order'];
+
             foreach ($value['version'] as $k=>$v){
                 $configs[$key]['items'][$k]             = [];
                 $configs[$key]['items'][$k]['title']    = $v;
                 $configs[$key]['items'][$k]['path']     = "app\\" . $value['code'] . "\\controller\\".$v;
                 $configs[$key]['items'][$k]['folder']   = $v;
+
                 if (($apps == 'BSAP' || $apps == 'SYSC') && $type == 0){
                     $configs[$key]['items'][$k]['groups'] = $value['group'];
                     $configs[$key]['items'][$k]['host']   = env('APP_HOST');
@@ -461,6 +459,7 @@ class Controller
                 "title" => "测试",
                 "folder" => "test",
                 "path" => "app\\test\\controller",
+                "order" => 10000,
                 "items" => [
                     0 => [
                         "title" => "v1",
@@ -473,6 +472,9 @@ class Controller
             ];
             array_push($configs, $test);
         }
+        //重新根据子系统排序
+        $configs = Collection::make($configs);
+        $configs = $configs->order('order', 'ASC')->toArray();
         return $configs;
     }
 
