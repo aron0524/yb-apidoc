@@ -453,6 +453,11 @@ class Controller
                 }
             }
         }
+
+        //重新根据子系统排序
+        $configs = Collection::make($configs);
+        $configs = $configs->order('order', 'ASC')->toArray();
+
         //rpc dtm 测试接口
         if (($apps == 'BSAP' || $apps == 'SYSC') && $type == 0){
             $test = [
@@ -470,11 +475,9 @@ class Controller
                     ]
                 ]
             ];
-            array_push($configs, $test);
+            array_unshift($configs, $test);
         }
-        //重新根据子系统排序
-        $configs = Collection::make($configs);
-        $configs = $configs->order('order', 'ASC')->toArray();
+
         return $configs;
     }
 
